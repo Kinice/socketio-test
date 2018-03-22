@@ -15,12 +15,32 @@
   </head>
   <body>
     <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
+    <form action="#">
+      <input id="m" autocomplete="off" /><button id="send">Send</button>
     </form>
     <script src="/script/socket.io.js"></script>
     <script>
-        var socket = io();
+        var socket = io()
+        var i = 0
+        var sendButton = document.getElementById('send')
+        var message = document.getElementById('m')
+
+        sendButton.addEventListener('click', function(e) {
+          e.preventDefault()
+          var msg = message.value
+          if(!msg) {
+            return
+          }
+          socket.emit('socket message', msg)
+          message.value = ''
+        })
+
+        socket.on('socket message', function(msg) {
+            var ul = document.getElementById('messages')
+            var li = document.createElement('li')
+            li.innerText = msg
+            ul.appendChild(li)
+        })
     </script>
   </body>
 </html>
